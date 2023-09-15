@@ -1,4 +1,4 @@
-module github.com/0xrawsec/jsonobj/v0
+module github.com/0xrawsec/jsonobj
 
 go 1.21.0
 

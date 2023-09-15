@@ -204,7 +204,7 @@ func FromStruct(s any) (o *JSONObject) {
 func FromStructWithOptions(s any, opt Options) (o *JSONObject) {
 	o = New()
 	o.Options = &opt
-	o.fromStruct(reflect.ValueOf(s))
+	o.FromStruct(s)
 	return
 }
 
@@ -243,6 +243,11 @@ func (o JSONObject) MarshalJSON() (out []byte, err error) {
 	// object closing
 	out = append(out, '}')
 	return
+}
+
+// FromStruct modifies JSONObject from structure
+func (o *JSONObject) FromStruct(s any) {
+	o.fromStruct(reflect.ValueOf(s))
 }
 
 // ConvertSlice converts any slice to a JSONObject ready slice.

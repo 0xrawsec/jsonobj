@@ -1,0 +1,42 @@
+# This workflow will build a golang project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-go
+
+name: CI
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21'
+
+    - name: Test
+      run: go test -failfast ./...
+
+    - uses: actions/checkout@v3
+      with:
+          ref: coverage
+          path: coverage-branch
+
+    - name: Coverage
+      run: |
+          fmt_coverage=$(go test -cover | grep -oP '\s.*?%'| tr -d ' ' | sed 's/%/%25/')
+          cd $GITHUB_WORKSPACE/coverage-branch
+          curl -s "https://img.shields.io/badge/coverage-$fmt_coverage-informational?style=for-the-badge" > badge.svg
+          git config --local user.name "Coverage Bot"
+          git config --local user.email "<>"
+          git add -A
+          git commit -m "Coverage updated commit=$GITHUB_SHA" || true
+          git push
+      

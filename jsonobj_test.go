@@ -48,10 +48,14 @@ func TestObject(t *testing.T) {
 	_, err := json.Marshal(&o)
 	tt.CheckErr(err)
 
+	// triggers index out of range bug
+	o.SetField("toast", 44)
+
 	// the field is already there so SetField will modify it
 	o.SetField("test", 43)
 	tt.Assert(o.HasField("test"))
 	tt.Assert(o.GetField("test").(int) == 43)
+	tt.Assert(o.GetField("toast").(int) == 44)
 
 	tt.Assert(!o.HasField("unknown"))
 }

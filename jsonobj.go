@@ -280,7 +280,7 @@ func (o *JSONObject) SetField(name string, value any) {
 	}
 
 	o.fields = append(o.fields, Field{name, value})
-	o.cache[name] = len(o.fields)
+	o.cache[name] = len(o.fields) - 1
 }
 
 // HasField returns true if field is present in JSONObject
